@@ -1,8 +1,0 @@
-{
- "tieude":"Đường tiệm cận (bài mẫu)",
- "cau":[
-  {"q":"Đường tiệm cận đứng của đồ thị hàm số $y=\\dfrac{2x+1}{x-3}$ là:","a":["$x=3$","$y=3$","$x=2$","$y=2$"],"d":0,"giai":"Mẫu bằng 0 tại $x=3$, tử khác 0 nên $x=3$ là tiệm cận đứng."},
-  {"q":"Đường tiệm cận ngang của đồ thị hàm số $y=\\dfrac{2x+1}{x-3}$ là:","a":["$y=1$","$y=2$","$y=-3$","$y=3$"],"d":1,"giai":"$\\lim_{x\\to\\pm\\infty}\\dfrac{2x+1}{x-3}=2$."},
-  {"q":"Đồ thị hàm số $y=\\dfrac{1}{x^2-1}$ có bao nhiêu đường tiệm cận?","a":["1","2","3","4"],"d":2,"giai":"Có hai tiệm cận đứng $x=\\pm1$ và một tiệm cận ngang $y=0$."}
- ]
-}
