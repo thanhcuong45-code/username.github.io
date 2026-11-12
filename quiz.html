@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Làm bài trắc nghiệm</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap">
+<script>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+:root{--ink:#16335b;--paper:#f3f8f6;--line:#cfe3dd;--red:#c8372d;--ok:#1d7a4d;--mute:#58708a;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--ink:#dbe8f7;--paper:#0f1c2b;--line:#1f3347;--red:#ff7a6e;--ok:#5fd199;--mute:#8fa6bd;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.6 "Be Vietnam Pro",system-ui,sans-serif;color:var(--ink);background:var(--paper)}
+main{max-width:720px;margin:0 auto;padding:24px 16px 56px}
+a{color:var(--ink)}
+h1{font-size:1.6rem;line-height:1.2;margin:8px 0 18px}
+.cau{border:2px solid var(--ink);border-radius:4px;padding:14px 16px;margin:0 0 16px}
+.cau p{margin:0 0 8px;font-weight:600}
+label{display:block;padding:8px 10px;margin:4px 0;border:1px solid var(--line);border-radius:4px;cursor:pointer}
+label:has(input:checked){border-color:var(--ink)}
+label.dung{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,transparent)}
+label.sai{border-color:var(--red);background:color-mix(in srgb,var(--red) 16%,transparent)}
+.giai{margin:8px 0 0;color:var(--mute);font-size:.95rem}
+button{font:inherit;font-weight:600;padding:10px 22px;background:var(--ink);color:var(--paper);border:0;border-radius:4px;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+#kq{font-size:1.2rem;font-weight:800;margin:16px 0}
+</style>
+</head>
+<body>
+<main>
+<a href="index.html">← Về trang chủ</a>
+<h1 id="tieude">Đang tải…</h1>
+<div id="ds"></div>
+<button id="nop" hidden>Nộp bài</button>
+<div id="kq" role="status"></div>
+</main>
+<script>
+const f=new URLSearchParams(location.search).get("f");
+let B=null;
+const ds=document.getElementById("ds"),tt=document.getElementById("tieude"),nop=document.getElementById("nop"),kq=document.getElementById("kq");
+const mj=()=>window.MathJax&&MathJax.typesetPromise&&MathJax.typesetPromise();
+fetch(f).then(r=>r.json()).then(b=>{
+ B=b;tt.textContent=b.tieude;document.title=b.tieude;
+ b.cau.forEach((c,i)=>{
+  const d=document.createElement("div");d.className="cau";
+  const p=document.createElement("p");p.textContent="Câu "+(i+1)+". "+c.q;d.appendChild(p);
+  c.a.forEach((x,j)=>{const l=document.createElement("label"),r=document.createElement("input");
+   r.type="radio";r.name="c"+i;r.value=j;l.appendChild(r);l.appendChild(document.createTextNode(" "+"ABCD"[j]+". "+x));d.appendChild(l)});
+  ds.appendChild(d)});
+ nop.hidden=false;
+ window.addEventListener("load",mj);mj();
+}).catch(()=>{tt.textContent="Không mở được bài này. Hãy kiểm tra lại đường dẫn."});
+nop.onclick=()=>{
+ let dung=0;
+ B.cau.forEach((c,i)=>{
+  const box=ds.children[i],ls=box.querySelectorAll("label"),ch=box.querySelector("input:checked");
+  ls.forEach(l=>{l.classList.remove("dung","sai")});
+  ls[c.d].classList.add("dung");
+  if(ch&&+ch.value===c.d)dung++;else if(ch)ls[+ch.value].classList.add("sai");
+  box.querySelectorAll("input").forEach(x=>x.disabled=true);
+  if(c.giai&&!box.querySelector(".giai")){const g=document.createElement("p");g.className="giai";g.textContent="Giải thích: "+c.giai;box.appendChild(g)}
+ });
+ kq.textContent="Kết quả: "+dung+"/"+B.cau.length+" câu đúng";
+ nop.hidden=true;mj();
+};
+</script>
+</body>
+</html>

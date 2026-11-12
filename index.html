@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toán tự học – Trắc nghiệm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&display=swap">
+<style>
+:root{--ink:#16335b;--paper:#f3f8f6;--line:#cfe3dd;--red:#c8372d;--mute:#58708a;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--ink:#dbe8f7;--paper:#0f1c2b;--line:#1f3347;--red:#ff7a6e;--mute:#8fa6bd;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.6 "Be Vietnam Pro",system-ui,sans-serif;color:var(--ink);background:var(--paper);
+background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px}
+main{max-width:980px;margin:0 auto;padding:32px 18px 56px}
+h1{font-size:clamp(2rem,6vw,3.4rem);line-height:1.1;font-weight:800;margin:0 0 6px}
+.sub{color:var(--mute);margin:0 0 28px;max-width:60ch}
+section{background:var(--paper);border:2px solid var(--ink);border-radius:4px;margin:0 0 20px;padding:16px 18px}
+section h2{margin:0 0 12px;font-size:1.4rem;border-bottom:3px solid var(--red);display:inline-block}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.cols{grid-template-columns:1fr}}
+h3{margin:0 0 6px;font-size:1rem}
+ul{list-style:none;margin:0;padding:0}
+li a{display:block;padding:8px 0;color:var(--ink);text-decoration:none;border-top:1px dashed var(--line)}
+li a:hover,li a:focus-visible{color:var(--red);outline:none;text-decoration:underline}
+.rong{color:var(--mute);font-size:.9rem;margin:0}
+</style>
+</head>
+<body>
+<main>
+<h1>Toán tự học</h1>
+<p class="sub">Chọn khối và phần học, rồi làm bài trắc nghiệm. Có chấm điểm ngay sau khi nộp bài.</p>
+<div id="ds"></div>
+</main>
+<script>
+const NHOM=[
+ {id:"lop10",ten:"Khối 10",con:[["dai-so","Đại số – Hàm số"],["hinh-hoc","Hình học – Thống kê"]]},
+ {id:"lop11",ten:"Khối 11",con:[["dai-so","Đại số – Giải tích"],["hinh-hoc","Hình học không gian"]]},
+ {id:"lop12",ten:"Khối 12",con:[["giai-tich","Giải tích"],["hinh-hoc","Hình học Oxyz – Xác suất"]]},
+ {id:"hsg",ten:"Học sinh giỏi",con:[["co-ban","Cơ bản"],["nang-cao","Nâng cao"]]},
+ {id:"thpt",ten:"Thi tốt nghiệp THPT",con:[["chuyen-de","Theo chuyên đề"],["luyen-de","Đề luyện tập"]]}
+];
+const ds=document.getElementById("ds");
+fetch("data/bai.json").then(r=>r.json()).catch(()=>[]).then(bai=>{
+ NHOM.forEach(n=>{
+  const s=document.createElement("section");
+  const h=document.createElement("h2");h.textContent=n.ten;s.appendChild(h);
+  const c=document.createElement("div");c.className="cols";
+  n.con.forEach(([cid,ten])=>{
+   const d=document.createElement("div");
+   const t=document.createElement("h3");t.textContent=ten;d.appendChild(t);
+   const ls=bai.filter(b=>b.nhom===n.id&&b.con===cid);
+   if(!ls.length){const p=document.createElement("p");p.className="rong";p.textContent="Chưa có bài. Thầy cô đang cập nhật.";d.appendChild(p)}
+   else{const u=document.createElement("ul");
+    ls.forEach(b=>{const li=document.createElement("li"),a=document.createElement("a");
+     a.href="quiz.html?f="+encodeURIComponent(b.file);a.textContent=b.ten+" ("+b.so_cau+" câu)";li.appendChild(a);u.appendChild(li)});
+    d.appendChild(u)}
+   c.appendChild(d)});
+  s.appendChild(c);ds.appendChild(s)});
+});
+</script>
+</body>
+</html>
